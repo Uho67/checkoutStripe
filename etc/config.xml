@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <mytest_stripe>
+                <model>Mytest\Checkout\Model\Payment\Stripe</model>
+                <title>Mytest Stripe</title>
+                <active>1</active>
+                <group>mytest_stripe</group>
+            </mytest_stripe>
+        </payment>
+    </default>
+</config>
