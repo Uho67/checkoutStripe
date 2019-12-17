@@ -34,20 +34,7 @@
         <settings>
             <label>Order</label>
         </settings>
-        <field name="hello" formElement="input">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="source" xsi:type="string">funnyorder</item>
-                    <item name="disabled" xsi:type="boolean">true</item>
-                </item>
-            </argument>
-        </field>
         <field name="area" formElement="select">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="source" xsi:type="string">area</item>
-                </item>
-            </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">Area</label>
@@ -64,59 +51,41 @@
         <field name="city" formElement="select">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:type="string">city</item>
+                    <item name="require" xsi:type="boolean">true</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">City</label>
-                <dataScope>page_layout</dataScope>
+                <dataScope>city</dataScope>
             </settings>
-            <formElements>
-                <select>
-                    <settings>
-                        <options class="Magento\Directory\Model\Config\Source\Country"/>
-                    </settings>
-                </select>
-            </formElements>
         </field>
-        <field name="phone" formElement="input">
+        <field name="warehouse" formElement="select">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:type="string">funnyorder</item>
                     <item name="require" xsi:type="boolean">true</item>
                 </item>
             </argument>
             <settings>
-                <label>Phone</label>
-                <visible>true</visible>
-                <dataScope>phone</dataScope>
-                <validation>
-                    <rule name="validate-number" xsi:type="boolean">true</rule>
-                    <rule name="required-entry" xsi:type="boolean">true</rule>
-                </validation>
-            </settings>
-        </field>
-        <field name="wish" formElement="input">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="source" xsi:type="string">funnyorder</item>
-                    <item name="require" xsi:type="boolean">true</item>
-                </item>
-            </argument>
-            <settings>
-                <label>Wish</label>
-                <visible>true</visible>
-                <dataScope>wish</dataScope>
+                <dataType>text</dataType>
+                <label translate="true">Warehouse</label>
+                <dataScope>warehouse</dataScope>
             </settings>
         </field>
         <field name="mybutton">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="component" xsi:type="string">Vaimo_Mytest/js/button</item>
+                    <item name="component" xsi:type="string">Mytest_Checkout/js/view/buttons/placeOrder</item>
                     <item name="visible" xsi:type="boolean">true</item>
                     <item name="formElement" xsi:type="string">button</item>
                     <item name="title" xsi:type="string">Send</item>
+                </item>
+            </argument>
+        </field>
+        <field name="hello" formElement="select" component="Mytest_Checkout/js/form/element/input_cost">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="disabled" xsi:type="boolean">true</item>
                 </item>
             </argument>
         </field>

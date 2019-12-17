@@ -8,6 +8,11 @@
 
 namespace Mytest\Checkout\Model;
 
+/**
+ * Interface CityInterface
+ * @package Mytest\Checkout\Model
+ * model for action with new post city
+ */
 interface CityInterface
 {
     const FIELD_ID = 'entity_id';

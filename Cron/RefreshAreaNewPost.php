@@ -10,10 +10,20 @@ namespace Mytest\Checkout\Cron;
 
 use Mytest\Checkout\Model\AreaInterface;
 
+/**
+ * Class RefreshAreaNewPost
+ * @package Mytest\Checkout\Cron
+ */
 class RefreshAreaNewPost extends AbstractRefreshDataNewPost
 {
+    /**
+     * usl for newPost api for get city
+     */
     const URL_NEW_POST = 'https://api.novaposhta.ua/v2.0/json/Address/getCities';
 
+    /**
+     * refresh bd
+     */
     public function execute()
     {
         $curl = $this->curlFactory->create();

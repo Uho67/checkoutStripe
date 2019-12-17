@@ -18,14 +18,42 @@ use Mytest\Checkout\Model\CityFactory;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\{CouldNotDeleteException,CouldNotSaveException};
 
+/**
+ * Class CityRepository
+ * @package Mytest\Checkout\Model
+ */
 class CityRepository implements CityRepositoryInterface
 {
+    /**
+     * @var \Mytest\Checkout\Model\CityFactory
+     */
     private $cityFactory;
+    /**
+     * @var ResourceModel
+     */
     private $resourceModel;
+    /**
+     * @var CollectionFactory
+     */
     private $collectionFactory;
+    /**
+     * @var CollectionProcessorInterface
+     */
     private $collectionProcessor;
+    /**
+     * @var SearchResultInterfaceFactory
+     */
     private $searchResultFactory;
 
+    /**
+     * CityRepository constructor.
+     *
+     * @param ResourceModel $resourceModel
+     * @param \Mytest\Checkout\Model\CityFactory $cityFactory
+     * @param CollectionFactory $collectionFactory
+     * @param CollectionProcessorInterface $collectionProcessor
+     * @param SearchResultInterfaceFactory $searchResultFactory
+     */
     public function __construct(
         ResourceModel $resourceModel,
         CityFactory $cityFactory,
@@ -40,6 +68,12 @@ class CityRepository implements CityRepositoryInterface
         $this->cityFactory = $cityFactory;
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     * @throws NoSuchEntityException
+     */
     public function getById($id)
     {
         $funnyOrder = $this->cityFactory->create();
@@ -51,6 +85,11 @@ class CityRepository implements CityRepositoryInterface
         }
     }
 
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return mixed
+     */
     public function getList(SearchCriteriaInterface $searchCriteria)
     {
         $collection = $this->collectionFactory->create();
@@ -63,6 +102,11 @@ class CityRepository implements CityRepositoryInterface
         return $searchResult;
     }
 
+    /**
+     * @param $id
+     *
+     * @throws CouldNotDeleteException
+     */
     public function deleteById($id)
     {
         try {
@@ -71,6 +115,12 @@ class CityRepository implements CityRepositoryInterface
         }
     }
 
+    /**
+     * @param CityInterface $model
+     *
+     * @return $this
+     * @throws CouldNotDeleteException
+     */
     public function delete(CityInterface $model)
     {
         try {
@@ -82,6 +132,12 @@ class CityRepository implements CityRepositoryInterface
         return $this;
     }
 
+    /**
+     * @param CityInterface $model
+     *
+     * @return CityInterface
+     * @throws CouldNotSaveException
+     */
     public function save(CityInterface $model)
     {
         try {

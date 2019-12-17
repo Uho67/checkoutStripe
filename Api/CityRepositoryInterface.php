@@ -8,19 +8,48 @@
 
 namespace Mytest\Checkout\Api;
 
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Exception\{CouldNotDeleteException,CouldNotSaveException};
+use Mytest\Checkout\Model\CityInterface;
+
 interface CityRepositoryInterface
 {
+    /**
+     * @param $id
+     *
+     * @return mixed
+     * @throws NoSuchEntityException
+     */
     public function getById($id);
 
-
+    /**
+     * @param $id
+     *
+     * @throws CouldNotDeleteException
+     */
     public function deleteById($id);
 
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return mixed
+     */
+    public function getList(SearchCriteriaInterface $searchCriteria);
 
-    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
+    /**
+     * @param CityInterface $model
+     *
+     * @return CityInterface
+     * @throws CouldNotSaveException
+     */
+    public function save(CityInterface $model);
 
-
-    public function save(\Mytest\Checkout\Model\CityInterface $model);
-
-
-    public function delete(\Mytest\Checkout\Model\CityInterface $model);
+    /**
+     * @param CityInterface $model
+     *
+     * @return $this
+     * @throws CouldNotDeleteException
+     */
+    public function delete(CityInterface $model);
 }

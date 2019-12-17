@@ -15,12 +15,34 @@ use Mytest\Checkout\Model\CityFactory;
 use Mytest\Checkout\Api\CityRepositoryInterface;
 use Magento\Framework\App\ResourceConnectionFactory;
 
+/**
+ * Class RefreshCityNewPost
+ * @package Mytest\Checkout\Cron
+ */
 class RefreshCityNewPost extends AbstractRefreshDataNewPost
 {
+    /**
+     * api url for newPost
+     */
     const URL_NEW_POST = 'https://api.novaposhta.ua/v2.0/json/Address/getCities';
+    /**
+     * @var CityFactory
+     */
     private $modelFactory;
+    /**
+     * @var CityRepositoryInterface
+     */
     private $repository;
 
+    /**
+     * RefreshCityNewPost constructor.
+     *
+     * @param CityFactory $modelFactory
+     * @param CityRepositoryInterface $cityRepository
+     * @param ResourceConnectionFactory $resourceConnectionFactory
+     * @param CurlFactory $curlFactory
+     * @param JsonFactory $jsonFactory
+     */
     public function __construct(
         CityFactory $modelFactory,
         CityRepositoryInterface $cityRepository,
@@ -33,6 +55,9 @@ class RefreshCityNewPost extends AbstractRefreshDataNewPost
         parent::__construct($resourceConnectionFactory, $curlFactory, $jsonFactory);
     }
 
+    /**
+     * refresh bd
+     */
     public function execute()
     {
         $curl = $this->curlFactory->create();

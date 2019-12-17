@@ -12,8 +12,15 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Mytest\Checkout\Block\Buttons\QuickStripe as Button;
 
+/**
+ * Class AddShortCutButton
+ * @package Mytest\Checkout\Observer
+ */
 class AddShortCutButton implements ObserverInterface
 {
+    /**
+     * @param Observer $observer
+     */
     public function execute(Observer $observer)
     {
         $shortcutButtons = $observer->getEvent()->getContainer();

@@ -15,6 +15,10 @@ use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Mytest\Checkout\Model\CityInterface;
 use Mytest\Checkout\Model\AreaInterface;
 
+/**
+ * Class UpgradeSchema
+ * @package Mytest\Checkout\Setup
+ */
 class UpgradeSchema implements UpgradeSchemaInterface
 {
     /**
@@ -47,7 +51,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 [
                     'nullable' => false,
                     'unsigned' => true,
-                    'unique'   => true
+                    'unique' => true
                 ],
                 'City Id'
             )->addColumn(
@@ -61,7 +65,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_TEXT,
                 50,
                 [
-                 'nullable' => false,
+                    'nullable' => false,
                 ],
                 'city ref'
             )->addColumn(
@@ -77,10 +81,16 @@ class UpgradeSchema implements UpgradeSchemaInterface
             )->addIndex(
                 $setup->getIdxName(
                     CityInterface::TABLE_NAME,
-                    [CityInterface::CITY_ID,CityInterface::CITY_REF],
+                    [
+                        CityInterface::CITY_ID,
+                        CityInterface::CITY_REF
+                    ],
                     \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
                 ),
-                [CityInterface::CITY_ID,CityInterface::CITY_REF],
+                [
+                    CityInterface::CITY_ID,
+                    CityInterface::CITY_REF
+                ],
                 ['type' => \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE]
             );
             $setup->getConnection()->createTable($tableElevator);

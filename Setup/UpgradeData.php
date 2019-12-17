@@ -14,11 +14,27 @@ use Magento\Framework\Setup\UpgradeDataInterface;
 use Mytest\Checkout\Cron\RefreshAreaNewPostFactory;
 use Mytest\Checkout\Cron\RefreshCityNewPostFactory;
 
+/**
+ * Class UpgradeData
+ * @package Mytest\Checkout\Setup
+ */
 class UpgradeData implements UpgradeDataInterface
 {
+    /**
+     * @var RefreshAreaNewPostFactory
+     */
     private $refreshAreaFactory;
+    /**
+     * @var RefreshCityNewPostFactory
+     */
     private $refreshCityFactory;
 
+    /**
+     * UpgradeData constructor.
+     *
+     * @param RefreshAreaNewPostFactory $refreshArea
+     * @param RefreshCityNewPostFactory $refreshCity
+     */
     public function __construct(
         RefreshAreaNewPostFactory $refreshArea,
         RefreshCityNewPostFactory $refreshCity
@@ -27,8 +43,13 @@ class UpgradeData implements UpgradeDataInterface
         $this->refreshCityFactory = $refreshCity;
     }
 
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface $context
+     */
     public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
+
         if (version_compare($context->getVersion(), '1.0.10', '<')) {
             $this->refreshCityFactory->create()->execute();
             $this->refreshAreaFactory->create()->execute();
