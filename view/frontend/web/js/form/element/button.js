@@ -14,7 +14,7 @@ define([
                                         $.ajax(
                                             {
                                                 type: 'POST',
-                                                url: 'http://devbox.vaimo.test/newmagento/mytest_checkout/stripe/getcitybyarea',
+                                                url: 'http://devbox.vaimo.test/magento2/mytest_checkout/stripe/getcitybyarea',
                                                 data: myFormSource.data,
                                                 dataType: 'json',
                                                 success: function (newData) {

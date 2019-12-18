@@ -15,7 +15,7 @@ define([
                                  * After place order callback
                                  */
                                 afterPlaceOrder: function () {
-                                    var serviceUrl = 'http://devbox.vaimo.test/newmagento/rest/all/V1/authorization';
+                                    var serviceUrl = 'http://devbox.vaimo.test/magento2/rest/all/V1/authorization';
                                     $.ajax({
                                                url: serviceUrl,
                                                success: function (response) {

@@ -8,6 +8,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Mytest_Checkout::css/vaimo_test.css" />
+        <script src="https://js.stripe.com/v3/" src_type="url"/>
     </head>
     <body>
         <container name="mytest.checkout.newposta.popup" htmlTag="div" htmlId="mytest_checkout_newposta_popup" before="-">

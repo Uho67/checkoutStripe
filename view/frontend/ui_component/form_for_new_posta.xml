@@ -23,10 +23,10 @@
         <settings>
             <submitUrl path="rest/V1/fannyorder"/>
         </settings>
-        <dataProvider class="Vaimo\Mytest\DataProvider\Frontend\CustomerDataProvider" name="form_for_new_posta_data_source">
+        <dataProvider class="Magento\Cms\Model\Block\DataProvider" name="form_for_new_posta_data_source">
             <settings>
-                <requestFieldName>id</requestFieldName>
-                <primaryFieldName>funny_id</primaryFieldName>
+                <requestFieldName>block_id</requestFieldName>
+                <primaryFieldName>block_id</primaryFieldName>
             </settings>
         </dataProvider>
     </dataSource>
@@ -60,7 +60,7 @@
                 <dataScope>city</dataScope>
             </settings>
         </field>
-        <field name="warehouse" formElement="select">
+        <field name="street" formElement="select">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="require" xsi:type="boolean">true</item>
@@ -68,8 +68,44 @@
             </argument>
             <settings>
                 <dataType>text</dataType>
-                <label translate="true">Warehouse</label>
-                <dataScope>warehouse</dataScope>
+                <label translate="true">Warehouse street</label>
+                <dataScope>street</dataScope>
+            </settings>
+        </field>
+        <field name="firstname" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="require" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <label>firstname</label>
+                <visible>true</visible>
+                <dataScope>firstname</dataScope>
+            </settings>
+        </field>
+        <field name="lastname" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="require" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <label>lastname</label>
+                <visible>true</visible>
+                <dataScope>lastname</dataScope>
+            </settings>
+        </field>
+        <field name="telephone" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="require" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <label>telephone</label>
+                <visible>true</visible>
+                <dataScope>telephone</dataScope>
             </settings>
         </field>
         <field name="mybutton">

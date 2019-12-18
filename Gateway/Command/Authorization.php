@@ -8,44 +8,20 @@
 
 namespace Mytest\Checkout\Gateway\Command;
 
-use Magento\Framework\HTTP\Client\Curl;
-use Magento\Framework\Serialize\Serializer\Json;
-use Magento\Checkout\Model\Session;
+use Magento\Checkout\Model\SessionFactory;
+use Mytest\Checkout\Helper\AutorizationStripeHelper;
 
-/**
- * Class Authorization
- * @package Mytest\Checkout\Gateway\Command
- */
 class Authorization implements AuthorizationInterface
 {
-    /**
-     * @var Json
-     */
-    private $json;
-    /**
-     * @var Curl
-     */
-    private $curl;
-    /**
-     * @var Session
-     */
-    private $checkoutSession;
+    private $checkoutSessionFactory;
+    private $autorizationStripeHelper;
 
-    /**
-     * Authorization constructor.
-     *
-     * @param Json $json
-     * @param Curl $curl
-     * @param Session $checkoutSession
-     */
     public function __construct(
-        Json $json,
-        Curl $curl,
-        Session $checkoutSession
+        AutorizationStripeHelper $autorizationStripeHelper,
+        SessionFactory $checkoutSessionFactory
     ) {
-        $this->checkoutSession = $checkoutSession;
-        $this->json = $json;
-        $this->curl = $curl;
+        $this->autorizationStripeHelper = $autorizationStripeHelper;
+        $this->checkoutSessionFactory = $checkoutSessionFactory;
     }
 
     /**
@@ -53,30 +29,7 @@ class Authorization implements AuthorizationInterface
      */
     public function execute()
     {
-        $order = $this->checkoutSession->getLastRealOrder();
-        $url = "https://api.stripe.com/v1/checkout/sessions";
-        $params = [
-            "line_items" =>
-                [
-                    [
-                        'name' => 'My first purchase magento',
-                        'description' => 'order № ' . $order->getRealOrderId(),
-                        'amount' => (int)$order->getGrandTotal() * 100,
-                        'currency' => $order->getOrderCurrency()->getData('currency_code'),
-                        'quantity' => 1
-                    ]
-                ],
-            "success_url" => "http://devbox.vaimo.test/newmagento/mytest_checkout/stripe/afterstripe?XDEBUG_SESSION_START=netbeans-xdebug",
-            "cancel_url" => "http://devbox.vaimo.test/newmagento/mytest_checkout/stripe/afterstripe?XDEBUG_SESSION_START=netbeans-xdebug",
-            "payment_method_types" => ['card']
-        ];
-        $this->curl->setHeaders([
-            "Authorization" => "Bearer sk_test_HiVxybRBtnHAnvn0LFli0chJ00aixm12K2",
-            "Content-Type" => "application/x-www-form-urlencoded",
-        ]);
-        $this->curl->post($url, $params);
-        $response = $this->json->unserialize($this->curl->getBody());
-
-        return $response['id'];
+        $order = $this->checkoutSessionFactory->create()->getLastRealOrder();
+        return $this->autorizationStripeHelper->getIdSession($order);
     }
 }

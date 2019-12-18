@@ -5,7 +5,7 @@ define([
        ], function ($, select, registry) {
     var area = registry.get('form_for_new_posta.form_for_new_posta.general.area');
     var city = registry.get('form_for_new_posta.form_for_new_posta.general.city');
-    var warehouse = registry.get('form_for_new_posta.form_for_new_posta.general.warehouse');
+    var warehouse = registry.get('form_for_new_posta.form_for_new_posta.general.street');
     var cityRecipient;
     area.value.subscribe(function (newarea) {
         var areaData = {};
@@ -13,7 +13,7 @@ define([
         $.ajax(
             {
                 type: 'POST',
-                url: 'http://devbox.vaimo.test/newmagento/mytest_checkout/newpost/getcitybyarea',
+                url: 'http://devbox.vaimo.test/magento2/mytest_checkout/newpost/getcitybyarea',
                 data: areaData,
                 dataType: 'json',
                 success: function (newData) {
@@ -43,7 +43,7 @@ define([
                    headers: {
                        "Content-Type": "application/json"
                    },
-                   xhrFields: { // Свойство 'xhrFields' устанавливает дополнительные поля в XMLHttpRequest. // Это можно использовать для установки свойства 'withCredentials'. // Установите значение «true», если вы хотите передать файлы cookie на сервер. // Если это включено, ваш сервер должен ответить заголовком // 'Access-Control-Allow-Credentials: true'.
+                   xhrFields: {
                        withCredentials: false
                    },
                    success: function (response) {

@@ -5,17 +5,23 @@ define([
            'Magento_Ui/js/form/components/button',
            'Magento_Ui/js/form/form'],
        function ($, storage, uiRegistry, button) {
-           var mydataSource = uiRegistry.get("funnyorderfront_form.funnyorderfront_form_data_source");
+           var mydataSource = uiRegistry.get("form_for_new_posta.form_for_new_posta_data_source");
            var mydata = uiRegistry.get("funnyorderfront_form.funnyorderfront_form");
+           var stripe = Stripe('pk_test_B2NI7xsjL50kBrlTJi7zvbJE00IL4TioOD');
            return button.extend({
 
                                     action: function () {
                                         $.ajax({
                                                    type: "POST",
                                                    dataType: "json",
-                                                   url: 'http://devbox.vaimo.test/newmagento/mytest_checkout/stripe/createorder',
-                                                   success:function (response) {
-                                                       console.log(response)
+                                                   data:mydataSource.data,
+                                                   url: 'http://devbox.vaimo.test/magento2/mytest_checkout/stripe/createorder',
+                                                   success: function (response) {
+                                                       stripe.redirectToCheckout({
+                                                                                     sessionId: response
+                                                                                 }).then(function (result) {
+
+                                                       })
                                                    }
                                                })
                                     }
