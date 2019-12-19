@@ -8,6 +8,10 @@
 
 namespace Mytest\Checkout\Model;
 
+/**
+ * Interface AreaInterface
+ * @package Mytest\Checkout\Model
+ */
 interface AreaInterface
 {
     const FIELD_ID = 'entity_id';

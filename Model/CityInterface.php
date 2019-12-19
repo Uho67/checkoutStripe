@@ -22,16 +22,63 @@ interface CityInterface
     const PARENT_AREA = 'area';
     const TABLE_NAME = 'new_post_city';
 
+    /**
+     * @return mixed
+     */
     public function getId();
+
+    /**
+     * @return mixed
+     */
     public function getCityId();
+
+    /**
+     * @return mixed
+     */
     public function getName();
+
+    /**
+     * @return mixed
+     */
     public function getRef();
+
+    /**
+     * @return mixed
+     */
     public function getArea();
 
-
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function setId($id);
+
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function setCityId($id);
+
+    /**
+     * @param $name
+     *
+     * @return mixed
+     */
     public function setName($name);
+
+    /**
+     * @param $ref
+     *
+     * @return mixed
+     */
     public function setRef($ref);
+
+    /**
+     * @param $area
+     *
+     * @return mixed
+     */
     public function setArea($area);
 }

@@ -22,6 +22,9 @@ class Collection extends AbstractCollection
         $this->_init(\Mytest\Checkout\Model\City::class, \Mytest\Checkout\Model\ResourceModel\City::class);
     }
 
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
         return $this->_toOptionArray(CityInterface::CITY_REF, CityInterface::CITY_NAME, []);

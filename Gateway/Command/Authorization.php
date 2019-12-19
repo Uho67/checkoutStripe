@@ -11,11 +11,27 @@ namespace Mytest\Checkout\Gateway\Command;
 use Magento\Checkout\Model\SessionFactory;
 use Mytest\Checkout\Helper\AutorizationStripeHelper;
 
+/**
+ * Class Authorization
+ * @package Mytest\Checkout\Gateway\Command
+ */
 class Authorization implements AuthorizationInterface
 {
+    /**
+     * @var SessionFactory
+     */
     private $checkoutSessionFactory;
+    /**
+     * @var AutorizationStripeHelper
+     */
     private $autorizationStripeHelper;
 
+    /**
+     * Authorization constructor.
+     *
+     * @param AutorizationStripeHelper $autorizationStripeHelper
+     * @param SessionFactory $checkoutSessionFactory
+     */
     public function __construct(
         AutorizationStripeHelper $autorizationStripeHelper,
         SessionFactory $checkoutSessionFactory
@@ -25,7 +41,7 @@ class Authorization implements AuthorizationInterface
     }
 
     /**
-     * @return string
+     * @return mixed|string
      */
     public function execute()
     {

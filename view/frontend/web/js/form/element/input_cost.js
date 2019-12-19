@@ -26,6 +26,7 @@ define([
         )
     });
     city.value.subscribe(function (newCity) {
+        console.log(city);
         cityRecipient = newCity;
         $.ajax({
                    type: "POST",
@@ -47,12 +48,11 @@ define([
                        withCredentials: false
                    },
                    success: function (response) {
-                       console.log(response.data[0]['Ref']);
                        var warehauses = [];
                        for (var i = 0; i < response.data.length; i++) {
                            warehauses.push({
-                                               'value': response.data[i]['Ref'],
-                                               'label': response.data[i]['Number']
+                                               'value': response.data[i]['DescriptionRu'],
+                                               'label': response.data[i]['DescriptionRu']
                                            })
                        }
                        warehouse.setOptions(warehauses);

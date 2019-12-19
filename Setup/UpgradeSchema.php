@@ -29,8 +29,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
      */
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
+        $setup->startSetup();
         if (version_compare($context->getVersion(), '1.0.5', '<')) {
-            $setup->startSetup();
             $tableElevator = $setup->getConnection()->newTable(
                 $setup->getTable(CityInterface::TABLE_NAME)
             )->addColumn(
@@ -94,10 +94,11 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ['type' => \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE]
             );
             $setup->getConnection()->createTable($tableElevator);
-            $setup->endSetup();
         }
+        /**
+         * table for area
+         */
         if (version_compare($context->getVersion(), '1.0.7', '<')) {
-            $setup->startSetup();
             $tableElevator = $setup->getConnection()->newTable(
                 $setup->getTable(AreaInterface::TABLE_NAME)
             )->addColumn(
@@ -127,7 +128,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'city ref'
             );
             $setup->getConnection()->createTable($tableElevator);
-            $setup->endSetup();
         }
+        $setup->endSetup();
     }
 }

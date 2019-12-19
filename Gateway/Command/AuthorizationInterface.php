@@ -15,7 +15,7 @@ namespace Mytest\Checkout\Gateway\Command;
 interface AuthorizationInterface
 {
     /**
-     * @return string
+     * @return mixed|string
      */
     public function execute();
 }

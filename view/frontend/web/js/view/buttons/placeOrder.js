@@ -6,11 +6,12 @@ define([
            'Magento_Ui/js/form/form'],
        function ($, storage, uiRegistry, button) {
            var mydataSource = uiRegistry.get("form_for_new_posta.form_for_new_posta_data_source");
-           var mydata = uiRegistry.get("funnyorderfront_form.funnyorderfront_form");
+           var mydata = uiRegistry.get("form_for_new_posta.form_for_new_posta");
            var stripe = Stripe('pk_test_B2NI7xsjL50kBrlTJi7zvbJE00IL4TioOD');
            return button.extend({
 
                                     action: function () {
+                                        mydata.validate();
                                         $.ajax({
                                                    type: "POST",
                                                    dataType: "json",

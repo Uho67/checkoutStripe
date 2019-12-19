@@ -108,6 +108,19 @@
                 <dataScope>telephone</dataScope>
             </settings>
         </field>
+        <field name="email" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="require" xsi:type="boolean">true</item>
+                    <item name="validate-email" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <label>email</label>
+                <visible>true</visible>
+                <dataScope>email</dataScope>
+            </settings>
+        </field>
         <field name="mybutton">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
