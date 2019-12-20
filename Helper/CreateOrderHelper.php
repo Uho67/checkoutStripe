@@ -15,6 +15,10 @@ use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
+use Mytest\Checkout\Model\AreaInterface;
+use Mytest\Checkout\Model\CityInterface;
+use Mytest\Checkout\Model\ResourceModel\City\CollectionFactory;
+use Magento\Framework\App\ResourceConnection;
 
 class CreateOrderHelper extends AbstractHelper
 {
@@ -23,8 +27,12 @@ class CreateOrderHelper extends AbstractHelper
     private $customerRepository;
     private $_storeManager;
     private $quoteRepository;
+    private $cityCollectionFactory;
+    private $resource;
 
     public function __construct(
+        ResourceConnection $resourceConnection,
+        CollectionFactory $collectionFactory,
         CartRepositoryInterface $cartRepository,
         QuoteManagement $quoteManagement,
         CustomerFactory $customerFactory,
@@ -32,6 +40,8 @@ class CreateOrderHelper extends AbstractHelper
         StoreManagerInterface $storeManager,
         Context $context
     ) {
+        $this->resource = $resourceConnection;
+        $this->cityCollectionFactory = $collectionFactory;
         $this->quoteRepository = $cartRepository;
         $this->quoteManagement = $quoteManagement;
         $this->customerFactory = $customerFactory;
@@ -40,8 +50,9 @@ class CreateOrderHelper extends AbstractHelper
         parent::__construct($context);
     }
 
-    public function createMageOrder($orderData, $quote)
+    public function createMageOrder($orderParams, $quote)
     {
+        $orderData = $this->getOrderData($orderParams);
         $store = $this->_storeManager->getStore();
         $websiteId = $this->_storeManager->getStore()->getWebsiteId();
         $customer = $this->customerFactory->create();
@@ -69,6 +80,7 @@ class CreateOrderHelper extends AbstractHelper
             ->setShippingMethod('flatrate_flatrate'); //shipping method
         $quote->setPaymentMethod('mytest_stripe'); //payment method
         $quote->setInventoryProcessed(false); //not effetc inventory
+        $quote->save();
         // Set Sales Order Payment
         $quote->getPayment()->importData(['method' => 'mytest_stripe']);
         // Collect Totals & Save Quote
@@ -87,5 +99,41 @@ class CreateOrderHelper extends AbstractHelper
         }
 
         return $result;
+    }
+
+    private function getOrderData($params)
+    {
+        $cityRef = $params['city'];
+        $city = $this->cityCollectionFactory->create()
+            ->addFieldToFilter(CityInterface::CITY_REF, ['eq' => $cityRef])
+            ->toOptionArray();
+        /**
+         * get area || region
+         */
+        $connection = $this->resource->getConnection();
+        $tableName = $connection->getTableName(AreaInterface::TABLE_NAME);
+        $areaData = $connection->fetchRow($connection->select()
+            ->from($tableName)
+            ->where(AreaInterface::AREA_REF . '=?', $params['area']));
+        $tempOrder = [
+            'email' => $params['email'],
+            //buyer email id
+            'shipping_address' => [
+                'firstname' => $params['firstname'],
+                //address Details
+                'lastname' => $params['lastname'],
+                'street' => $params['street'],
+                'city' => $city[0]['label'],
+                'country_id' => 'UA',
+                'region_id' => $areaData['entity_id'],
+                'region' => $areaData['area_name'],
+                'postcode' => '10019',
+                'telephone' => $params['telephone'],
+                'fax' => '',
+                'save_in_address_book' => 1
+            ]
+        ];
+
+        return $tempOrder;
     }
 }
