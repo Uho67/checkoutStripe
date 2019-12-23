@@ -23,6 +23,9 @@ define([
                                                                                  }).then(function (result) {
 
                                                        })
+                                                   },
+                                                   complete: function (res) {
+                                                       console.log(res);
                                                    }
                                                })
                                     }

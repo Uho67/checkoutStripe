@@ -17,10 +17,13 @@ use Magento\Quote\Model\QuoteFactory;
 
 class CreateQuoteHelper extends AbstractHelper
 {
+    const TYPE_OF_PRODUCT_CONFIGURABLE = 'configurable';
+    const TYPE_OF_PRODUCT_BUNDLE = 'bundle';
     private $storeManager;
     private $productRepository;
     private $configurableFactory;
     private $quoteFactory;
+
     public function __construct(
         QuoteFactory $quoteFactory,
         ConfigurableFactory $configurableFactory,
@@ -34,22 +37,54 @@ class CreateQuoteHelper extends AbstractHelper
         $this->storeManager = $storeManager;
         parent::__construct($context);
     }
-    private function getProducts($params)
-    {
 
+    private function getProducts($paramsProducts)
+    {
+        $storeId = $this->storeManager->getStore()->getId();
+        $product = $this->productRepository->getById($paramsProducts['product'], false, $storeId);
+        switch ($product->getTypeId()) {
+            case self::TYPE_OF_PRODUCT_CONFIGURABLE :
+                $product = $this->configurableFactory->create()
+                    ->getProductByAttributes($paramsProducts['super_attribute'], $product);
+
+                return [
+                    'product' => $product,
+                    'qty' => intval($paramsProducts['qty'])
+                ];
+            case self::TYPE_OF_PRODUCT_BUNDLE:
+                $allProducts = [];
+                $bundleCollection = $product->getTypeInstance(true)
+                    ->getSelectionsCollection(
+                        $product->getTypeInstance(true)->getOptionsIds($product),
+                        $product
+                    );
+                for ($i = 1; $i <= count($paramsProducts['bundle_option']); $i++) {
+                    $bundleProduct = $bundleCollection->getItemById($paramsProducts['bundle_option'][$i]);
+                    $allProducts[] = [
+                        'product' => $this->productRepository->getById($bundleProduct->getId()),
+                        'qty' => intval($paramsProducts['bundle_option_qty'][$i] * intval($paramsProducts['qty']))
+                    ];
+                }
+
+                return $allProducts;
+            default:
+                return [
+                    'product' => $product,
+                    'qty' => intval($paramsProducts['qty'])
+                ];
+        }
     }
+
     public function getQuote($paramsProducts)
     {
-        $params = $paramsProducts;
-        $storeId = $this->storeManager->getStore()->getId();
-        $product = $this->productRepository->getById($params['product'], false, $storeId);
-        $simpleProduct = $this->configurableFactory->create()
-            ->getProductByAttributes($params['super_attribute'], $product);
         $store = $this->storeManager->getStore();
-        $quote = $this->quoteFactory->create(); //Create object of quote
+        $quote = $this->quoteFactory->create();
         $quote->setStore($store);
         $quote->setCurrency();
-        $quote->addProduct($simpleProduct, 1);
+        foreach ($this->getProducts($paramsProducts) as $productInfo) {
+            $quote->addProduct($productInfo['product'], $productInfo['qty']);
+        }
+
         return $quote;
     }
 }
