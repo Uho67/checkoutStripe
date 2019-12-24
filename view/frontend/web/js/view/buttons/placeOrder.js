@@ -12,6 +12,7 @@ define([
 
                                     action: function () {
                                         mydata.validate();
+                                        console.log(mydataSource);
                                         $.ajax({
                                                    type: "POST",
                                                    dataType: "json",

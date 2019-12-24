@@ -121,6 +121,17 @@
                 <dataScope>email</dataScope>
             </settings>
         </field>
+        <field name="productsParams" formElement="select" component="Mytest_Checkout/js/form/element/input_cost">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="disabled" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+            <settings>
+                <visible>false</visible>
+                <dataScope>productsParams</dataScope>
+            </settings>
+        </field>
         <field name="mybutton">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -128,13 +139,6 @@
                     <item name="visible" xsi:type="boolean">true</item>
                     <item name="formElement" xsi:type="string">button</item>
                     <item name="title" xsi:type="string">Send</item>
-                </item>
-            </argument>
-        </field>
-        <field name="hello" formElement="select" component="Mytest_Checkout/js/form/element/input_cost">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="disabled" xsi:type="boolean">true</item>
                 </item>
             </argument>
         </field>

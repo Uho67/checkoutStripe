@@ -12,53 +12,85 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory as ResultJsonFactory;
 use Magento\Checkout\Model\CartFactory;
-use Mytest\Checkout\Helper\CreateOrderHelper;
-use Mytest\Checkout\Helper\AutorizationStripeHelper;
-use Magento\Backend\Model\SessionFactory;
-use Mytest\Checkout\Helper\CreateQuoteHelper;
+use Mytest\Checkout\Helper\CreateOrderHelperFactory;
+use Mytest\Checkout\Helper\AutorizationStripeHelperFactory;
+use Mytest\Checkout\Helper\CreateQuoteHelperFactory;
+use Magento\Framework\Webapi\Rest\Request\Deserializer\Json as Deserializer;
 
+/**
+ * Class CreateOrder
+ * @package Mytest\Checkout\Controller\Stripe
+ */
 class CreateOrder extends Action
 {
-    private $createOrderHelper;
+    /**
+     * @var CreateOrderHelperFactory
+     */
+    private $createOrderHelperFactory;
+    /**
+     * @var ResultJsonFactory
+     */
     private $resultJsonFactory;
+    /**
+     * @var CartFactory
+     */
     private $cartFactory;
-    private $autorizationStripeHelper;
-    private $sessionFactory;
-    private $createQuoteHelper;
+    /**
+     * @var AutorizationStripeHelperFactory
+     */
+    private $autorizationStripeHelperFactory;
+    /**
+     * @var CreateQuoteHelperFactory
+     */
+    private $createQuoteHelperFactory;
+    /**
+     * @var Deserializer
+     */
+    private $deserializer;
 
+    /**
+     * CreateOrder constructor.
+     *
+     * @param Deserializer $deserializer
+     * @param CreateQuoteHelperFactory $createQuoteHelperFactory
+     * @param AutorizationStripeHelperFactory $autorizationStripeHelperFactory
+     * @param CartFactory $cartFactory
+     * @param ResultJsonFactory $resultJsonFactory
+     * @param CreateOrderHelperFactory $createOrderHelperFactory
+     * @param Context $context
+     */
     public function __construct(
-        CreateQuoteHelper $createQuoteHelper,
-        SessionFactory $sessionFactory,
-        AutorizationStripeHelper $autorizationStripeHelper,
+        Deserializer $deserializer,
+        CreateQuoteHelperFactory $createQuoteHelperFactory,
+        AutorizationStripeHelperFactory $autorizationStripeHelperFactory,
         CartFactory $cartFactory,
         ResultJsonFactory $resultJsonFactory,
-        CreateOrderHelper $createOrderHelper,
+        CreateOrderHelperFactory $createOrderHelperFactory,
         Context $context
     ) {
-        $this->createQuoteHelper = $createQuoteHelper;
-        $this->sessionFactory = $sessionFactory;
-        $this->autorizationStripeHelper = $autorizationStripeHelper;
+        $this->deserializer = $deserializer;
+        $this->createQuoteHelperFactory = $createQuoteHelperFactory;
+        $this->autorizationStripeHelperFactory = $autorizationStripeHelperFactory;
         $this->cartFactory = $cartFactory;
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->createOrderHelper = $createOrderHelper;
+        $this->createOrderHelperFactory = $createOrderHelperFactory;
         parent::__construct($context);
     }
+
 
     public function execute()
     {
         $orderParams = $this->getRequest()->getParams();
-        $session = $this->sessionFactory->create();
-        if ($session->getVaimoMytestParamsForQuote()) {
-            $productParams = $session->getVaimoMytestParamsForQuote();
-            $quote = $this->createQuoteHelper->getQuote($productParams);
-            $session->setVaimoMytestParamsForQuote(null);
+        if (!empty($orderParams['productsParams'])) {
+            $productParams = $this->deserializer->deserialize($orderParams['productsParams']);
+            $quote = $this->createQuoteHelperFactory->create()->getQuote($productParams);
         } else {
             $quote = $this->cartFactory->create()->getQuote();
         }
-        $order = $this->createOrderHelper->createMageOrder($orderParams, $quote);
+        $order = $this->createOrderHelperFactory->create()->createMageOrder($orderParams, $quote);
         $resultJson = $this->resultJsonFactory->create();
         if ($order->getRealOrderId()) {
-            $id = $this->autorizationStripeHelper->getIdSession($order);
+            $id = $this->autorizationStripeHelperFactory->create()->getIdSession($order);
 
             return $resultJson->setData($id);
         } else {

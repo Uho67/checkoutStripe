@@ -10,7 +10,10 @@ namespace Mytest\Checkout\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Mytest\Checkout\Block\Buttons\QuickStripe as Button;
+use Mytest\Checkout\Block\Buttons\QuickStripe;
+use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Catalog\Block\ShortcutButtons;
+
 
 /**
  * Class AddShortCutButton
@@ -18,17 +21,40 @@ use Mytest\Checkout\Block\Buttons\QuickStripe as Button;
  */
 class AddShortCutButton implements ObserverInterface
 {
+    const PATH_PATTERN_SHIPPING = 'carriers/vaimo_stripe_newpost/%s';
+    const PATH_PATTERN_PAYMENT = 'payment/mytest_stripe/%s';
     /**
-     * @param Observer $observer
+     * @var ConfigInterface
      */
+    private $config;
+    /**
+     * @var ShortcutButtons
+     */
+    private $shortcutButtons;
+
+    /**
+     * AddShortCutButton constructor.
+     *
+     * @param ConfigInterface $config
+     */
+    public function __construct(ConfigInterface $config)
+    {
+        $this->config = $config;
+    }
+
+
     public function execute(Observer $observer)
     {
-        $shortcutButtons = $observer->getEvent()->getContainer();
-        $shortcut = $shortcutButtons->getLayout()->createBlock(
-            Button::class,
+        if (!$this->config->getStripeValue('active') || !$this->config->getNewPostValue('active')) {
+            return;
+        }
+        $this->shortcutButtons = $observer->getEvent()->getContainer();
+        $shortcut = $this->shortcutButtons->getLayout()->createBlock(
+            QuickStripe::class,
             '',
             []
         );
-        $shortcutButtons->addShortcut($shortcut);
+        $this->shortcutButtons->addShortcut($shortcut);
     }
+
 }

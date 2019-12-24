@@ -11,51 +11,89 @@ namespace Mytest\Checkout\Controller\Stripe;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Quote\Model\QuoteFactory;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Backend\Model\SessionFactory;
+use Magento\Customer\Model\SessionFactory;
 
 class CreateOrderOneItem extends Action
 {
     private $productRepository;
-    private $configurable;
     private $storeManager;
-    private $quoteFactory;
-    private $sessionFactory;
     private $jsonFactory;
+    private $sessionFactory;
+    private $session;
 
     public function __construct(
-        JsonFactory $jsonFactory,
         SessionFactory $sessionFactory,
-        QuoteFactory $quoteFactory,
+        JsonFactory $jsonFactory,
         StoreManagerInterface $storeManager,
-        Configurable $configurable,
         ProductRepositoryInterface $productRepository,
         Context $context
     ) {
-        $this->jsonFactory = $jsonFactory;
         $this->sessionFactory = $sessionFactory;
-        $this->quoteFactory = $quoteFactory;
+        $this->jsonFactory = $jsonFactory;
         $this->storeManager = $storeManager;
-        $this->configurable = $configurable;
         $this->productRepository = $productRepository;
         parent::__construct($context);
     }
 
     public function execute()
     {
-        $json = $this->jsonFactory->create();
-        $params = $this->getRequest()->getParams();
-        $productId = (int)$this->getRequest()->getParam('product');
-        if ($productId) {
-            $session = $this->sessionFactory->create();
-            $session->setVaimoMytestParamsForQuote($params);
+        $productParams = $this->getRequest()->getParams();
+        if (!empty($productParams)) {
+            if (intval($productParams['qty']) === 0) {
+                $this->messageManager->addWarningMessage(__(" Qty can not be 0 "));
 
-            return $json->setData(['yes' => true]);
+                return [];
+            }
+            if (isset($productParams['super_attribute'])) {
+                foreach ($productParams['super_attribute'] as $atribute) {
+                    if ($atribute == "") {
+                        $this->messageManager->addWarningMessage(__("You should to choose atribute"));
+
+                        return [];
+                    }
+                }
+            }
         } else {
-            return $json->setData(['yes' => false]);
+            $productParams = false;
         }
+        $json = $this->jsonFactory->create();
+        $customerData = $this->getCustomerData();
+
+        return $json->setData([
+            'products' => $productParams,
+            'customer' => $customerData
+        ]);
+    }
+
+    private function getSession()
+    {
+        if (null === $this->session) {
+            $this->session = $this->sessionFactory->create();
+        }
+
+        return $this->session;
+    }
+
+    private function getCustomerData()
+    {
+        $session = $this->getSession();
+        $customerData = [];
+        if ($session->getCustomerId()) {
+            $customer = $session->getCustomerData();
+            $customerData['firstname'] = $customer->getFirstname();
+            $customerData['lastname'] = $customer->getLastname();
+            $customerData['email'] = $customer->getEmail();
+            if ($customer->getAddresses()[0]->getTelephone()) {
+                $customerData['phone'] = $customer->getAddresses()[0]->getTelephone();
+            } else {
+                $customerData['phone'] = false;
+            }
+
+            return $customerData;
+        }
+
+        return false;
     }
 }

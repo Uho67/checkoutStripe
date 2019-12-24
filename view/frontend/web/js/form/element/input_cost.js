@@ -72,10 +72,10 @@ define([
                                                 "CitySender": "db5c88e0-391c-11dd-90d9-001a92567626",
                                                 "CityRecipient": cityRecipient,
                                                 "Weight": "10",
-                                                "ServiceType": "DoorsDoors",
+                                                "ServiceType": "WarehouseWarehouse",
                                                 "Cost": "100",
                                                 "CargoType": "Cargo",
-                                                "SeatsAmount": "10",
+                                                "SeatsAmount": "1",
                                                 "PackCount": "1",
                                                 "PackRef": "1499fa4a-d26e-11e1-95e4-0026b97ed48a"
                                             },

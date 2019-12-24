@@ -50,6 +50,14 @@ class CreateOrderHelper extends AbstractHelper
         parent::__construct($context);
     }
 
+    /**
+     * @param $orderParams
+     * @param \Magento\Quote\Model\Quote $quote
+     *
+     * @return array|\Magento\Framework\Model\AbstractExtensibleModel|\Magento\Sales\Api\Data\OrderInterface|object|null
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function createMageOrder($orderParams, $quote)
     {
         $orderData = $this->getOrderData($orderParams);
@@ -77,7 +85,7 @@ class CreateOrderHelper extends AbstractHelper
         $shippingAddress = $quote->getShippingAddress();
         $shippingAddress->setCollectShippingRates(true)
             ->collectShippingRates()
-            ->setShippingMethod('flatrate_flatrate'); //shipping method
+            ->setShippingMethod('vaimo_stripe_newpost_vaimo_stripe_newpost'); //shipping method
         $quote->setPaymentMethod('mytest_stripe'); //payment method
         $quote->setInventoryProcessed(false); //not effetc inventory
         $quote->save();
@@ -124,6 +132,7 @@ class CreateOrderHelper extends AbstractHelper
                 'lastname' => $params['lastname'],
                 'street' => $params['street'],
                 'city' => $city[0]['label'],
+                'region_code'=> $params['city'],
                 'country_id' => 'UA',
                 'region_id' => $areaData['entity_id'],
                 'region' => $areaData['area_name'],

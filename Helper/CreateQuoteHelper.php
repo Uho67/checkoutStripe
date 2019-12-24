@@ -48,8 +48,10 @@ class CreateQuoteHelper extends AbstractHelper
                     ->getProductByAttributes($paramsProducts['super_attribute'], $product);
 
                 return [
-                    'product' => $product,
-                    'qty' => intval($paramsProducts['qty'])
+                    [
+                        'product' => $product,
+                        'qty' => intval($paramsProducts['qty'])
+                    ]
                 ];
             case self::TYPE_OF_PRODUCT_BUNDLE:
                 $allProducts = [];
@@ -69,8 +71,10 @@ class CreateQuoteHelper extends AbstractHelper
                 return $allProducts;
             default:
                 return [
-                    'product' => $product,
-                    'qty' => intval($paramsProducts['qty'])
+                    [
+                        'product' => $product,
+                        'qty' => intval($paramsProducts['qty'])
+                    ]
                 ];
         }
     }

@@ -9,5 +9,18 @@
                 <group>mytest_stripe</group>
             </mytest_stripe>
         </payment>
+        <carriers>
+            <vaimo_stripe_newpost>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>Mytest\Checkout\Model\Carrier\NewPost</model>
+                <name>Vaimo NEW POST shipping</name>
+                <price>10.00</price>
+                <title>Vaimo NEW POST shipping</title>
+                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+                <handling_type>F</handling_type>
+                <new_post_key>f5b54b3f7ce5800ca0ffcd95a4dbed15</new_post_key>
+            </vaimo_stripe_newpost>
+        </carriers>
     </default>
 </config>
