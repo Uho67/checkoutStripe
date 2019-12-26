@@ -5,4 +5,6 @@
                 type="Mytest\Checkout\Gateway\Command\Authorization" />
     <preference for="Mytest\Checkout\Api\CityRepositoryInterface"
                 type="Mytest\Checkout\Model\CityRepository" />
+    <preference for="Mytest\Checkout\Model\Commands\Area\GetListInterface"
+                type="Mytest\Checkout\Model\Commands\Area\GetList" />
 </config>

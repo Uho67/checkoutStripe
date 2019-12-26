@@ -9,9 +9,9 @@
 namespace Mytest\Checkout\Model\Source\NewPost;
 
 use Magento\Framework\Option\ArrayInterface;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Exception\NotFoundException;
+use Mytest\Checkout\Model\Commands\Area\GetListInterface;
 use Mytest\Checkout\Model\AreaInterface;
+use Magento\Framework\Exception\NotFoundException;
 
 /**
  * Class Area
@@ -20,19 +20,19 @@ use Mytest\Checkout\Model\AreaInterface;
 class Area implements ArrayInterface
 {
     /**
-     * @var ResourceConnection
+     * @var GetListInterface
      */
-    private $resource;
+    private $getList;
 
     /**
      * Area constructor.
      *
-     * @param ResourceConnection $resource
+     * @param GetListInterface $getList
      */
     public function __construct(
-        ResourceConnection $resource
+        GetListInterface $getList
     ) {
-        $this->resource = $resource;
+        $this->getList = $getList;
     }
 
     /**
@@ -41,9 +41,7 @@ class Area implements ArrayInterface
      */
     public function toOptionArray()
     {
-        $connection = $this->resource->getConnection();
-        $tableName = $connection->getTableName(AreaInterface::TABLE_NAME);
-        $items = $connection->fetchAll($connection->select()->from($tableName));
+        $items = $this->getList->execute();
         if(!$items || empty($items)) {
             throw new NotFoundException(__('Not found area new_post'));
         }
