@@ -14,15 +14,47 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Customer\Model\SessionFactory;
+use Magento\Customer\Model\Session;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\ResultInterface;
 
-class CreateOrderOneItem extends Action
+/**
+ * Class InformationAboutOrder
+ * @package Mytest\Checkout\Controller\Stripe
+ */
+class InformationAboutOrder extends Action
 {
+    /**
+     * @var ProductRepositoryInterface
+     */
     private $productRepository;
+    /**
+     * @var StoreManagerInterface
+     */
     private $storeManager;
+    /**
+     * @var JsonFactory
+     */
     private $jsonFactory;
+    /**
+     * @var SessionFactory
+     */
     private $sessionFactory;
+    /**
+     * @var Session
+     */
     private $session;
 
+    /**
+     * CreateOrderOneItem constructor.
+     *
+     * @param SessionFactory $sessionFactory
+     * @param JsonFactory $jsonFactory
+     * @param StoreManagerInterface $storeManager
+     * @param ProductRepositoryInterface $productRepository
+     * @param Context $context
+     */
     public function __construct(
         SessionFactory $sessionFactory,
         JsonFactory $jsonFactory,
@@ -37,6 +69,10 @@ class CreateOrderOneItem extends Action
         parent::__construct($context);
     }
 
+    /**
+     * @return array|ResponseInterface|Json|ResultInterface
+     * if order came from pdp we must give back information about product
+     */
     public function execute()
     {
         $productParams = $this->getRequest()->getParams();
@@ -67,6 +103,9 @@ class CreateOrderOneItem extends Action
         ]);
     }
 
+    /**
+     * @return \Magento\Customer\Model\Session
+     */
     private function getSession()
     {
         if (null === $this->session) {
@@ -76,6 +115,10 @@ class CreateOrderOneItem extends Action
         return $this->session;
     }
 
+    /**
+     * @return array|bool
+     * if customer is autozationed
+     */
     private function getCustomerData()
     {
         $session = $this->getSession();

@@ -16,6 +16,12 @@ use Mytest\Checkout\Helper\CreateOrderHelperFactory;
 use Mytest\Checkout\Helper\AutorizationStripeHelperFactory;
 use Mytest\Checkout\Helper\CreateQuoteHelperFactory;
 use Magento\Framework\Webapi\Rest\Request\Deserializer\Json as Deserializer;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Webapi\Exception;
 
 /**
  * Class CreateOrder
@@ -77,7 +83,12 @@ class CreateOrder extends Action
         parent::__construct($context);
     }
 
-
+    /**
+     * @return ResponseInterface|Json|ResultInterface
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws Exception
+     */
     public function execute()
     {
         $orderParams = $this->getRequest()->getParams();

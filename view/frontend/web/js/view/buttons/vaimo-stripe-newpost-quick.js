@@ -42,10 +42,10 @@ define([
             var sendUrl;
             var formData;
             if (form[0]) {
-                sendUrl = form[0].action.replace('checkout/cart/add', 'mytest_checkout/stripe/createorderoneitem');
+                sendUrl = form[0].action.replace('checkout/cart/add', 'mytest_checkout/stripe/InformationAboutOrder');
                 formData = new FormData(form[0]);
             } else {
-                sendUrl = 'http://devbox.vaimo.test/magento2/mytest_checkout/stripe/createorderoneitem'
+                sendUrl = 'http://devbox.vaimo.test/magento2/mytest_checkout/stripe/InformationAboutOrder'
                 formData = null;
             }
             $.ajax({

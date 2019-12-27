@@ -18,15 +18,35 @@ class Config implements ConfigInterface
     const DEFAULT_PATTERN = 'payment/%s/%s';
     const PATH_PATTERN_SHIPPING = 'carriers/vaimo_stripe_newpost/%s';
     const PATH_PATTERN_PAYMENT  = 'payment/mytest_stripe/%s';
+    /**
+     * @var
+     */
     private $methodCode;
+    /**
+     * @var
+     */
     private $pathPattern;
+    /**
+     * @var ScopeConfigInterface
+     */
     private $scopeConfig;
 
+    /**
+     * Config constructor.
+     *
+     * @param ScopeConfigInterface $scopeConfig
+     */
     public function __construct(ScopeConfigInterface $scopeConfig)
     {
         $this->scopeConfig = $scopeConfig;
     }
 
+    /**
+     * @param string $field
+     * @param null $storeId
+     *
+     * @return mixed|null
+     */
     public function getValue($field, $storeId = null)
     {
         if ($this->methodCode === null || $this->pathPattern === null) {
@@ -39,14 +59,29 @@ class Config implements ConfigInterface
             $storeId
         );
     }
+
+    /**
+     * @param string $methodCode
+     */
     public function setMethodCode($methodCode)
     {
         $this->methodCode = $methodCode;
     }
+
+    /**
+     * @param string $pathPattern
+     */
     public function setPathPattern($pathPattern)
     {
         $this->pathPattern = $pathPattern;
     }
+
+    /**
+     * @param $field
+     * @param null $storeId
+     *
+     * @return mixed
+     */
     public function getStripeValue($field, $storeId = null)
     {
         return $this->scopeConfig->getValue(
@@ -55,6 +90,13 @@ class Config implements ConfigInterface
             $storeId
         );
     }
+
+    /**
+     * @param $field
+     * @param null $storeId
+     *
+     * @return mixed
+     */
     public function getNewPostValue($field, $storeId = null)
     {
         return $this->scopeConfig->getValue(

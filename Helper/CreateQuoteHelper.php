@@ -14,16 +14,44 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\ConfigurableFactory;
 use Magento\Quote\Model\QuoteFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Quote\Model\Quote;
+use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * Class CreateQuoteHelper
+ * @package Mytest\Checkout\Helper
+ */
 class CreateQuoteHelper extends AbstractHelper
 {
     const TYPE_OF_PRODUCT_CONFIGURABLE = 'configurable';
     const TYPE_OF_PRODUCT_BUNDLE = 'bundle';
+    /**
+     * @var StoreManagerInterface
+     */
     private $storeManager;
+    /**
+     * @var ProductRepositoryInterface
+     */
     private $productRepository;
+    /**
+     * @var ConfigurableFactory
+     */
     private $configurableFactory;
+    /**
+     * @var QuoteFactory
+     */
     private $quoteFactory;
 
+    /**
+     * CreateQuoteHelper constructor.
+     *
+     * @param QuoteFactory $quoteFactory
+     * @param ConfigurableFactory $configurableFactory
+     * @param ProductRepositoryInterface $productRepository
+     * @param StoreManagerInterface $storeManager
+     * @param Context $context
+     */
     public function __construct(
         QuoteFactory $quoteFactory,
         ConfigurableFactory $configurableFactory,
@@ -38,6 +66,12 @@ class CreateQuoteHelper extends AbstractHelper
         parent::__construct($context);
     }
 
+    /**
+     * @param $paramsProducts
+     *
+     * @return array
+     * @throws NoSuchEntityException
+     */
     private function getProducts($paramsProducts)
     {
         $storeId = $this->storeManager->getStore()->getId();
@@ -79,6 +113,13 @@ class CreateQuoteHelper extends AbstractHelper
         }
     }
 
+    /**
+     * @param $paramsProducts
+     *
+     * @return Quote
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
     public function getQuote($paramsProducts)
     {
         $store = $this->storeManager->getStore();

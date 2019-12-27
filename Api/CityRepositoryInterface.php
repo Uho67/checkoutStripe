@@ -13,6 +13,10 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\{CouldNotDeleteException,CouldNotSaveException};
 use Mytest\Checkout\Model\CityInterface;
 
+/**
+ * Interface CityRepositoryInterface
+ * @package Mytest\Checkout\Api
+ */
 interface CityRepositoryInterface
 {
     /**

@@ -19,7 +19,16 @@ use Mytest\Checkout\Model\AreaInterface;
 use Mytest\Checkout\Model\CityInterface;
 use Mytest\Checkout\Model\ResourceModel\City\CollectionFactory;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Quote\Model\Quote;
+use Magento\Framework\Model\AbstractExtensibleModel;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
+/**
+ * Class CreateOrderHelper
+ * @package Mytest\Checkout\Helper
+ */
 class CreateOrderHelper extends AbstractHelper
 {
     private $quoteManagement;
@@ -30,6 +39,18 @@ class CreateOrderHelper extends AbstractHelper
     private $cityCollectionFactory;
     private $resource;
 
+    /**
+     * CreateOrderHelper constructor.
+     *
+     * @param ResourceConnection $resourceConnection
+     * @param CollectionFactory $collectionFactory
+     * @param CartRepositoryInterface $cartRepository
+     * @param QuoteManagement $quoteManagement
+     * @param CustomerFactory $customerFactory
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param StoreManagerInterface $storeManager
+     * @param Context $context
+     */
     public function __construct(
         ResourceConnection $resourceConnection,
         CollectionFactory $collectionFactory,
@@ -52,11 +73,11 @@ class CreateOrderHelper extends AbstractHelper
 
     /**
      * @param $orderParams
-     * @param \Magento\Quote\Model\Quote $quote
+     * @param Quote $quote
      *
-     * @return array|\Magento\Framework\Model\AbstractExtensibleModel|\Magento\Sales\Api\Data\OrderInterface|object|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return array|AbstractExtensibleModel|OrderInterface|object|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function createMageOrder($orderParams, $quote)
     {
@@ -109,6 +130,11 @@ class CreateOrderHelper extends AbstractHelper
         return $result;
     }
 
+    /**
+     * @param $params
+     *
+     * @return array
+     */
     private function getOrderData($params)
     {
         $cityRef = $params['city'];

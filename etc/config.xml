@@ -12,7 +12,8 @@
         <carriers>
             <vaimo_stripe_newpost>
                 <active>1</active>
-                <sallowspecific>0</sallowspecific>
+                <sallowspecific>1</sallowspecific>
+                <specificcountry>UA</specificcountry>
                 <model>Mytest\Checkout\Model\Carrier\NewPost</model>
                 <name>Vaimo NEW POST shipping</name>
                 <price>10.00</price>
