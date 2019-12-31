@@ -8,8 +8,10 @@
 
 namespace Mytest\Checkout\Cron;
 
+use Composer\Repository\RepositoryInterface;
 use Magento\Framework\HTTP\Client\CurlFactory;
 use Magento\Framework\Serialize\Serializer\JsonFactory;
+use Mytest\Checkout\Gateway\Config\ConfigFactory;
 use Mytest\Checkout\Model\CityInterface;
 use Mytest\Checkout\Model\CityFactory;
 use Mytest\Checkout\Api\CityRepositoryInterface;
@@ -34,25 +36,17 @@ class RefreshCityNewPost extends AbstractRefreshDataNewPost
      */
     private $repository;
 
-    /**
-     * RefreshCityNewPost constructor.
-     *
-     * @param CityFactory $modelFactory
-     * @param CityRepositoryInterface $cityRepository
-     * @param ResourceConnectionFactory $resourceConnectionFactory
-     * @param CurlFactory $curlFactory
-     * @param JsonFactory $jsonFactory
-     */
     public function __construct(
-        CityFactory $modelFactory,
-        CityRepositoryInterface $cityRepository,
+        CityRepositoryInterface $repository,
+        CityFactory $cityFactory,
+        ConfigFactory $configFactory,
         ResourceConnectionFactory $resourceConnectionFactory,
         CurlFactory $curlFactory,
         JsonFactory $jsonFactory
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->repository = $cityRepository;
-        parent::__construct($resourceConnectionFactory, $curlFactory, $jsonFactory);
+        $this->modelFactory = $cityFactory;
+        $this->repository = $repository;
+        parent::__construct($configFactory, $resourceConnectionFactory, $curlFactory, $jsonFactory);
     }
 
     /**
@@ -68,7 +62,7 @@ class RefreshCityNewPost extends AbstractRefreshDataNewPost
         $param = $json->serialize([
             'modelName' => 'Address',
             'calledMethod' => 'getCities',
-            'apiKey' => self::KEY_NEW_POST
+            'apiKey' => $this->getNewPostKey()
         ]);
         $curl->post(self::URL_NEW_POST, $param);
         $request = $json->unserialize($curl->getBody());

@@ -23,6 +23,7 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\HTTP\Client\Curl;
 use Magento\Framework\Serialize\Serializer\Json;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 /**
  * Class NewPost
@@ -62,20 +63,9 @@ class NewPost extends AbstractCarrier implements CarrierInterface
      */
     protected $_rateMethodFactory;
 
-    /**
-     * NewPost constructor.
-     *
-     * @param DateTime $dateTime
-     * @param JsonFactory $jsonFactory
-     * @param CurlFactory $curlFactory
-     * @param ScopeConfigInterface $scopeConfig
-     * @param ErrorFactory $rateErrorFactory
-     * @param ResultFactory $rateResultFactory
-     * @param MethodFactory $rateMethodFactory
-     * @param LoggerInterface $logger
-     * @param array $data
-     */
+   private $timeZona;
     public function __construct(
+        TimezoneInterface $timezone,
         DateTime $dateTime,
         JsonFactory $jsonFactory,
         CurlFactory $curlFactory,
@@ -86,6 +76,7 @@ class NewPost extends AbstractCarrier implements CarrierInterface
         LoggerInterface $logger,
         array $data = []
     ) {
+        $this->timeZona = $timezone;
         $this->dateTime = $dateTime;
         $this->jsonFactory = $jsonFactory;
         $this->curlFactory = $curlFactory;
@@ -115,6 +106,14 @@ class NewPost extends AbstractCarrier implements CarrierInterface
         $date = $this->dateTime->gmtDate('d.m.Y ');
         $curl->get('https://api.privatbank.ua/p24api/exchange_rates?json&date=' . $date);
         $request = $json->unserialize($curl->getBody());
+        /**
+         * if today's exchange is not , made request yesterday's exchange
+         */
+        if(empty($request['exchangeRate'])) {
+            $date = $this->timeZona->date(strtotime($date . "-1 days"))->format('d.m.Y');
+            $curl->get('https://api.privatbank.ua/p24api/exchange_rates?json&date=' . $date);
+            $request = $json->unserialize($curl->getBody());
+        }
         for ($i = 1; $i < count($request['exchangeRate']); $i++) {
             if ($request['exchangeRate'][$i]['currency'] == $currencyCode) {
                 return $request['exchangeRate'][$i];

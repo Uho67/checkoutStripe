@@ -8,6 +8,7 @@ define([
     var warehouse = registry.get('form_for_new_posta.form_for_new_posta.general.street');
     var cityRecipient;
     area.value.subscribe(function (newarea) {
+        console.log(area);
         var areaData = {};
         areaData.areaRef = newarea;
         $.ajax(
@@ -26,7 +27,7 @@ define([
         )
     });
     city.value.subscribe(function (newCity) {
-        console.log(city);
+        // warehouse.visible(false);
         cityRecipient = newCity;
         $.ajax({
                    type: "POST",
@@ -56,6 +57,7 @@ define([
                                            })
                        }
                        warehouse.setOptions(warehauses);
+                       // area.disabled(true);
                    }
                });
     });

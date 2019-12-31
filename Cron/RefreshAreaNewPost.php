@@ -34,7 +34,7 @@ class RefreshAreaNewPost extends AbstractRefreshDataNewPost
         $param = $json->serialize([
             'modelName' => 'Address',
             'calledMethod' => 'getAreas',
-            'apiKey' => self::KEY_NEW_POST
+            'apiKey' => $this->getNewPostKey()
         ]);
         $curl->post(self::URL_NEW_POST, $param);
         $request = $json->unserialize($curl->getBody());

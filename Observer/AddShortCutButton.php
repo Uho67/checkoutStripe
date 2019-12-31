@@ -14,7 +14,6 @@ use Mytest\Checkout\Block\Buttons\QuickStripe;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Catalog\Block\ShortcutButtons;
 
-
 /**
  * Class AddShortCutButton
  * @package Mytest\Checkout\Observer
@@ -42,7 +41,11 @@ class AddShortCutButton implements ObserverInterface
         $this->config = $config;
     }
 
-
+    /**
+     * @param Observer $observer
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function execute(Observer $observer)
     {
         if (!$this->config->getStripeValue('active') || !$this->config->getNewPostValue('active')) {
@@ -56,5 +59,4 @@ class AddShortCutButton implements ObserverInterface
         );
         $this->shortcutButtons->addShortcut($shortcut);
     }
-
 }

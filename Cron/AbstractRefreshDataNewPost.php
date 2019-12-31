@@ -11,6 +11,7 @@ namespace Mytest\Checkout\Cron;
 use Magento\Framework\Serialize\Serializer\JsonFactory;
 use Magento\Framework\HTTP\Client\CurlFactory;
 use Magento\Framework\App\ResourceConnectionFactory;
+use Mytest\Checkout\Gateway\Config\ConfigFactory;
 
 /**
  * Class AbstractRefreshDataNewPost
@@ -19,10 +20,8 @@ use Magento\Framework\App\ResourceConnectionFactory;
  */
 abstract class AbstractRefreshDataNewPost
 {
-    /**
-     * key for accept newPosta servises
-     */
-    const KEY_NEW_POST = 'f5b54b3f7ce5800ca0ffcd95a4dbed15';
+    const PATH_KEY_NEW_POST = 'new_post_key';
+
     /**
      * @var CurlFactory
      */
@@ -35,19 +34,26 @@ abstract class AbstractRefreshDataNewPost
      * @var ResourceConnectionFactory
      */
     protected $resourceConnectionFactory;
+    /**
+     * @var ConfigFactory
+     */
+    protected $configFactory;
 
     /**
      * AbstractRefreshDataNewPost constructor.
      *
+     * @param ConfigFactory $configFactory
      * @param ResourceConnectionFactory $resourceConnectionFactory
      * @param CurlFactory $curlFactory
      * @param JsonFactory $jsonFactory
      */
     public function __construct(
+        ConfigFactory $configFactory,
         ResourceConnectionFactory $resourceConnectionFactory,
         CurlFactory $curlFactory,
         JsonFactory $jsonFactory
     ) {
+        $this->configFactory = $configFactory;
         $this->resourceConnectionFactory = $resourceConnectionFactory;
         $this->jsonFactory = $jsonFactory;
         $this->curlFactory = $curlFactory;
@@ -57,4 +63,12 @@ abstract class AbstractRefreshDataNewPost
      * refresh bd
      */
     abstract public function execute();
+
+    /**
+     * @return mixed
+     */
+    protected function getNewPostKey()
+    {
+        return $this->configFactory->create()->getNewPostValue(self::PATH_KEY_NEW_POST);
+    }
 }

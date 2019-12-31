@@ -99,7 +99,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
          * table for area
          */
         if (version_compare($context->getVersion(), '1.0.7', '<')) {
-            $tableElevator = $setup->getConnection()->newTable(
+            $table = $setup->getConnection()->newTable(
                 $setup->getTable(AreaInterface::TABLE_NAME)
             )->addColumn(
                 AreaInterface::FIELD_ID,
@@ -127,7 +127,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ],
                 'city ref'
             );
-            $setup->getConnection()->createTable($tableElevator);
+            $setup->getConnection()->createTable($table);
         }
         $setup->endSetup();
     }
