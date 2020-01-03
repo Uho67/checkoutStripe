@@ -14,6 +14,7 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Mytest\Checkout\Model\CityInterface;
 use Mytest\Checkout\Model\AreaInterface;
+use Mytest\Checkout\Model\NewPostAddressInterface;
 
 /**
  * Class UpgradeSchema
@@ -21,6 +22,8 @@ use Mytest\Checkout\Model\AreaInterface;
  */
 class UpgradeSchema implements UpgradeSchemaInterface
 {
+    const TABLE_NAME_ADDRESS ='customer_address_entity';
+    const ADDRESS_ENTITY_ID = 'entity_id';
     /**
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
@@ -127,6 +130,72 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ],
                 'city ref'
             );
+            $setup->getConnection()->createTable($table);
+        }
+        //table for extension attribute new_post_address
+        if (version_compare($context->getVersion(), '1.1.9', '<')) {
+            $table = $setup->getConnection()->newTable(
+                $setup->getTable(NewPostAddressInterface::TABLE_NAME)
+            )->addColumn(
+                NewPostAddressInterface::FIELD_ID,
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable' => false,
+                    'primary' => true,
+                    'unsigned' => true,
+                    'identity' => true
+                ],
+                'Entity Id'
+            )->addColumn(
+                NewPostAddressInterface::FIELD_ADDRESS_ID,
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable' => false,
+                    'unsigned' => true,
+                    'unique' => true
+                ],
+                'Address Id'
+            )->addColumn(
+                NewPostAddressInterface::CITY_REF,
+                Table::TYPE_TEXT,
+                50,
+                [
+                    'nullable' => false,
+                ],
+                'city ref'
+            )->addColumn(
+                NewPostAddressInterface::AREA_REF,
+                Table::TYPE_TEXT,
+                50,
+                [
+                    'nullable' => false,
+                ],
+                'area ref'
+            )->addColumn(
+                NewPostAddressInterface::WAREHOUSE_REF,
+                Table::TYPE_TEXT,
+                50,
+                [
+                    'nullable' => false,
+                ],
+                'warehouse ref'
+            )->addForeignKey( // Add foreign key for table entity
+                $setup->getFkName(
+                    NewPostAddressInterface::TABLE_NAME, // New table
+                    NewPostAddressInterface::FIELD_ADDRESS_ID, // Column in New Table
+                    self::TABLE_NAME_ADDRESS, // Reference Table
+                    self::ADDRESS_ENTITY_ID// Column in Reference table
+                ),
+                NewPostAddressInterface::FIELD_ID, // New table column
+                $setup->getTable(self::TABLE_NAME_ADDRESS), // Reference Table
+                self::ADDRESS_ENTITY_ID, // Reference Table Column
+                // When the parent is deleted, delete the row with foreign key
+                Table::ACTION_CASCADE
+            )->setComment(
+                'When address would be deleted we will be deleting line '
+            );;
             $setup->getConnection()->createTable($table);
         }
         $setup->endSetup();

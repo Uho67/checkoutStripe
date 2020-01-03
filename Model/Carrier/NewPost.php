@@ -101,23 +101,27 @@ class NewPost extends AbstractCarrier implements CarrierInterface
      */
     private function getExchangeRates($currencyCode)
     {
-        $curl = $this->getCurl();
-        $json = $this->getJson();
-        $date = $this->dateTime->gmtDate('d.m.Y ');
-        $curl->get('https://api.privatbank.ua/p24api/exchange_rates?json&date=' . $date);
-        $request = $json->unserialize($curl->getBody());
-        /**
-         * if today's exchange is not , made request yesterday's exchange
-         */
-        if(empty($request['exchangeRate'])) {
-            $date = $this->timeZona->date(strtotime($date . "-1 days"))->format('d.m.Y');
+        try {
+            $curl = $this->getCurl();
+            $json = $this->getJson();
+            $date = $this->dateTime->gmtDate('d.m.Y ');
             $curl->get('https://api.privatbank.ua/p24api/exchange_rates?json&date=' . $date);
             $request = $json->unserialize($curl->getBody());
-        }
-        for ($i = 1; $i < count($request['exchangeRate']); $i++) {
-            if ($request['exchangeRate'][$i]['currency'] == $currencyCode) {
-                return $request['exchangeRate'][$i];
+            /**
+             * if today's exchange is not , made request yesterday's exchange
+             */
+            if (empty($request['exchangeRate'])) {
+                $date = $this->timeZona->date(strtotime($date . "-1 days"))->format('d.m.Y');
+                $curl->get('https://api.privatbank.ua/p24api/exchange_rates?json&date=' . $date);
+                $request = $json->unserialize($curl->getBody());
             }
+            for ($i = 1; $i < count($request['exchangeRate']); $i++) {
+                if ($request['exchangeRate'][$i]['currency'] == $currencyCode) {
+                    return $request['exchangeRate'][$i];
+                }
+            }
+        } catch (\Exception $exception) {
+            return false;
         }
 
         return false;
@@ -142,7 +146,7 @@ class NewPost extends AbstractCarrier implements CarrierInterface
         try {
             $exchangeRates = $this->getExchangeRates($request->getBaseCurrency()->getCurrencyCode());
             if(!$exchangeRates) {
-                $this->_logger->log(1,$request->getBaseCurrency()->getCurrencyCode()."not available in  Exchange Rates");
+                $this->_logger->log(100,$request->getBaseCurrency()->getCurrencyCode()."not available in  Exchange Rates");
                 throw new NotFoundException(__('Your currency not available'));
             }
             $curl = $this->getCurl();
@@ -156,7 +160,8 @@ class NewPost extends AbstractCarrier implements CarrierInterface
                 'apiKey' => $this->getConfigData(self::PATH_KEY_NEW_POST),
                 'methodProperties' => [
                     "CitySender" => "db5c88e0-391c-11dd-90d9-001a92567626",
-                    "CityRecipient" => $request->getData('dest_region_code'),
+//                    "CityRecipient" => $request->getData('dest_region_code'),
+                    "CityRecipient" => $request->getAllItems()[0]->getAddress()->getExtensionAttributes('new_post_address')['new_post_address']['city_ref'],
                     "Weight" => $request->getData('weight') || 1000,
                     "ServiceType" => "WarehouseWarehouse",
                     "Cost" => $generalPrice * $exchangeRates['saleRate'],

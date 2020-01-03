@@ -7,4 +7,9 @@
                 type="Mytest\Checkout\Model\CityRepository" />
     <preference for="Mytest\Checkout\Model\Commands\Area\GetListInterface"
                 type="Mytest\Checkout\Model\Commands\Area\GetList" />
+    <preference for="Mytest\Checkout\Model\NewPostAddressInterface"
+                type="Mytest\Checkout\Model\NewPostAddress" />
+    <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+        <plugin name="mytest_checkout_custom_shipping_fields" type="Mytest\Checkout\Plugin\Checkout\LayoutProcessorPlugin" sortOrder="10"/>
+    </type>
 </config>
