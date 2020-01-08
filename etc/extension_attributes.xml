@@ -6,4 +6,7 @@
     <extension_attributes for="Magento\Checkout\Api\Data\ShippingInformationInterface">
         <attribute code="new_post_address" type="Mytest\Checkout\Model\NewPostAddressInterface" />
     </extension_attributes>
+    <extension_attributes for="Magento\Quote\Api\Data\CartInterface">
+        <attribute code="new_post_address" type="Mytest\Checkout\Model\NewPostAddressInterface" />
+    </extension_attributes>
 </config>

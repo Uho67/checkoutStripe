@@ -22,7 +22,7 @@ use Mytest\Checkout\Model\NewPostAddressInterface;
  */
 class UpgradeSchema implements UpgradeSchemaInterface
 {
-    const TABLE_NAME_ADDRESS ='customer_address_entity';
+    const TABLE_NAME_ADDRESS ='quote';
     const ADDRESS_ENTITY_ID = 'entity_id';
     /**
      * @param SchemaSetupInterface $setup
@@ -133,7 +133,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()->createTable($table);
         }
         //table for extension attribute new_post_address
-        if (version_compare($context->getVersion(), '1.1.9', '<')) {
+        if (version_compare($context->getVersion(), '1.1.11', '<')) {
             $table = $setup->getConnection()->newTable(
                 $setup->getTable(NewPostAddressInterface::TABLE_NAME)
             )->addColumn(
@@ -151,12 +151,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 NewPostAddressInterface::FIELD_ADDRESS_ID,
                 Table::TYPE_INTEGER,
                 null,
-                [
-                    'nullable' => false,
-                    'unsigned' => true,
-                    'unique' => true
-                ],
-                'Address Id'
+                ['unsigned' => true, 'nullable' => false, 'default' => '0'],
+                'Quote Id'
             )->addColumn(
                 NewPostAddressInterface::CITY_REF,
                 Table::TYPE_TEXT,
@@ -188,7 +184,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     self::TABLE_NAME_ADDRESS, // Reference Table
                     self::ADDRESS_ENTITY_ID// Column in Reference table
                 ),
-                NewPostAddressInterface::FIELD_ID, // New table column
+                NewPostAddressInterface::FIELD_ADDRESS_ID, // New table column
                 $setup->getTable(self::TABLE_NAME_ADDRESS), // Reference Table
                 self::ADDRESS_ENTITY_ID, // Reference Table Column
                 // When the parent is deleted, delete the row with foreign key

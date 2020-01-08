@@ -39,9 +39,17 @@ define(
                 if (!quote.billingAddress()) {
                     selectBillingAddressAction(quote.shippingAddress());
                 }
+                var address = quote.shippingAddress();
+                address.extension_attributes = {
+                    new_post_address: {
+                        'city_ref': newPostCity.value._latestValue,
+                            'warehouse_ref': warehouse.value._latestValue,
+                            'area_ref': regionId.value._latestValue
+                    }
+                }
                 payload = {
                     addressInformation: {
-                        shipping_address: quote.shippingAddress(),
+                        shipping_address: address,
                         billing_address: quote.billingAddress(),
                         shipping_method_code: quote.shippingMethod().method_code,
                         shipping_carrier_code: quote.shippingMethod().carrier_code,

@@ -16,7 +16,7 @@ interface NewPostAddressInterface
 {
     const TABLE_NAME = 'new_post_address';
     const FIELD_ID = 'entity_id';
-    const FIELD_ADDRESS_ID = 'address_id';
+    const FIELD_ADDRESS_ID = 'quote_id';
     const CITY_REF = 'city_ref';
     const AREA_REF = 'area_ref';
     const WAREHOUSE_REF = 'warehouse_ref';
@@ -29,7 +29,7 @@ interface NewPostAddressInterface
     /**
      * @return mixed
      */
-    public function getAddressId();
+    public function getQuoteId();
 
     /**
      * @return mixed
@@ -51,7 +51,7 @@ interface NewPostAddressInterface
      *
      * @return mixed
      */
-    public function setAddressId($id);
+    public function setQuoteId($id);
 
     /**
      * @param $ref

@@ -9,6 +9,7 @@
 namespace Mytest\Checkout\Model;
 
 use Magento\Framework\Model\AbstractModel;
+use Mytest\Checkout\Model\ResourceModel\NewPostAddress as ResourceModel;
 
 /**
  * Class NewPostAddress
@@ -16,6 +17,10 @@ use Magento\Framework\Model\AbstractModel;
  */
 class NewPostAddress extends AbstractModel implements NewPostAddressInterface
 {
+    public function _construct()
+    {
+        $this->_init(ResourceModel::class);
+    }
     /**
      * @return mixed
      */
@@ -27,7 +32,7 @@ class NewPostAddress extends AbstractModel implements NewPostAddressInterface
     /**
      * @return mixed
      */
-    public function getAddressId()
+    public function getQuoteId()
     {
         return $this->getData(NewPostAddressInterface::FIELD_ADDRESS_ID);
     }
@@ -61,9 +66,9 @@ class NewPostAddress extends AbstractModel implements NewPostAddressInterface
      *
      * @return mixed|void
      */
-    public function setAddressId($id)
+    public function setQuoteId($id)
     {
-        $this->setData(NewPostAddressInterface::FIELD_ADDRESS_ID,$id);
+        $this->setData(NewPostAddressInterface::FIELD_ADDRESS_ID, $id);
     }
 
     /**
@@ -73,7 +78,7 @@ class NewPostAddress extends AbstractModel implements NewPostAddressInterface
      */
     public function setAreaRef($ref)
     {
-        $this->setData(NewPostAddressInterface::AREA_REF,$ref);
+        $this->setData(NewPostAddressInterface::AREA_REF, $ref);
     }
 
     /**
@@ -83,7 +88,7 @@ class NewPostAddress extends AbstractModel implements NewPostAddressInterface
      */
     public function setCityRef($ref)
     {
-        $this->setData(NewPostAddressInterface::CITY_REF,$ref);
+        $this->setData(NewPostAddressInterface::CITY_REF, $ref);
     }
 
     /**
@@ -93,6 +98,6 @@ class NewPostAddress extends AbstractModel implements NewPostAddressInterface
      */
     public function setWarehouseRef($ref)
     {
-        $this->setData(NewPostAddressInterface::WAREHOUSE_REF,$ref);
+        $this->setData(NewPostAddressInterface::WAREHOUSE_REF, $ref);
     }
 }

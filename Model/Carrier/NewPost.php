@@ -154,6 +154,11 @@ class NewPost extends AbstractCarrier implements CarrierInterface
             $curl->setHeaders([
                 'Content-Type' => 'application/json'
             ]);
+            if(is_array($request->getAllItems()[0]->getAddress()->getExtensionAttributes())){
+                $cityRef = $request->getAllItems()[0]->getAddress()->getExtensionAttributes('new_post_address')['new_post_address']['city_ref'];
+            } else {
+                $cityRef = $request->getAllItems()[0]->getQuote()->getExtensionAttributes()->getNewPostAddress()->getCityRef();
+            }
             $param = $json->serialize([
                 'modelName' => 'InternetDocument',
                 'calledMethod' => 'getDocumentPrice',
@@ -161,7 +166,7 @@ class NewPost extends AbstractCarrier implements CarrierInterface
                 'methodProperties' => [
                     "CitySender" => "db5c88e0-391c-11dd-90d9-001a92567626",
 //                    "CityRecipient" => $request->getData('dest_region_code'),
-                    "CityRecipient" => $request->getAllItems()[0]->getAddress()->getExtensionAttributes('new_post_address')['new_post_address']['city_ref'],
+                    "CityRecipient" => $cityRef,
                     "Weight" => $request->getData('weight') || 1000,
                     "ServiceType" => "WarehouseWarehouse",
                     "Cost" => $generalPrice * $exchangeRates['saleRate'],

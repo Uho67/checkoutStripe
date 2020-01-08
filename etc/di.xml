@@ -9,7 +9,14 @@
                 type="Mytest\Checkout\Model\Commands\Area\GetList" />
     <preference for="Mytest\Checkout\Model\NewPostAddressInterface"
                 type="Mytest\Checkout\Model\NewPostAddress" />
+    <preference for="Mytest\Checkout\Api\NewPostAddressRepositoryInterface" type="Mytest\Checkout\Model\NewPostAddressRepository"/>
     <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
         <plugin name="mytest_checkout_custom_shipping_fields" type="Mytest\Checkout\Plugin\Checkout\LayoutProcessorPlugin" sortOrder="10"/>
+    </type>
+    <type name="Magento\Quote\Model\QuoteRepository">
+        <plugin name="new_post_quote_repository" type="Mytest\Checkout\Plugin\Quote\QuoteRepositoryPlugin" sortOrder="10"/>
+    </type>
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="new_post_address_save_to_quote" type="Mytest\Checkout\Plugin\Quote\ShippingInformationManagementPlugin" sortOrder="10"/>
     </type>
 </config>
