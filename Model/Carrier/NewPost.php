@@ -31,8 +31,21 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
  */
 class NewPost extends AbstractCarrier implements CarrierInterface
 {
+    /**
+     * path to key for new post api
+     */
     const PATH_KEY_NEW_POST = 'new_post_key';
+    /**
+     * path to config city sender
+     */
+    const CITY_SENDER = 'city_sender';
+    /**
+     * url new post
+     */
     const URL_NEW_POST = 'https://api.novaposhta.ua/v2.0/json/';
+    /**
+     * @var string $_code
+     */
     protected $_code = 'vaimo_stripe_newpost';
     /**
      * @var CurlFactory
@@ -62,8 +75,25 @@ class NewPost extends AbstractCarrier implements CarrierInterface
      * @var MethodFactory
      */
     protected $_rateMethodFactory;
+    /**
+     * @var TimezoneInterface
+     */
+    private $timeZona;
 
-   private $timeZona;
+    /**
+     * NewPost constructor.
+     *
+     * @param TimezoneInterface $timezone
+     * @param DateTime $dateTime
+     * @param JsonFactory $jsonFactory
+     * @param CurlFactory $curlFactory
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ErrorFactory $rateErrorFactory
+     * @param ResultFactory $rateResultFactory
+     * @param MethodFactory $rateMethodFactory
+     * @param LoggerInterface $logger
+     * @param array $data
+     */
     public function __construct(
         TimezoneInterface $timezone,
         DateTime $dateTime,
@@ -145,8 +175,9 @@ class NewPost extends AbstractCarrier implements CarrierInterface
         }
         try {
             $exchangeRates = $this->getExchangeRates($request->getBaseCurrency()->getCurrencyCode());
-            if(!$exchangeRates) {
-                $this->_logger->log(100,$request->getBaseCurrency()->getCurrencyCode()."not available in  Exchange Rates");
+            if (!$exchangeRates) {
+                $this->_logger->log(100, $request->getBaseCurrency()
+                        ->getCurrencyCode() . "not available in  Exchange Rates");
                 throw new NotFoundException(__('Your currency not available'));
             }
             $curl = $this->getCurl();
@@ -154,18 +185,21 @@ class NewPost extends AbstractCarrier implements CarrierInterface
             $curl->setHeaders([
                 'Content-Type' => 'application/json'
             ]);
-            if(is_array($request->getAllItems()[0]->getAddress()->getExtensionAttributes())){
-                $cityRef = $request->getAllItems()[0]->getAddress()->getExtensionAttributes('new_post_address')['new_post_address']['city_ref'];
+            if (is_array($request->getAllItems()[0]->getAddress()->getExtensionAttributes())) {
+                $cityRef = $request->getAllItems()[0]->getAddress()
+                               ->getExtensionAttributes('new_post_address')['new_post_address']['city_ref'];
             } else {
-                $cityRef = $request->getAllItems()[0]->getQuote()->getExtensionAttributes()->getNewPostAddress()->getCityRef();
+                $cityRef = $request->getAllItems()[0]->getQuote()
+                    ->getExtensionAttributes()
+                    ->getNewPostAddress()
+                    ->getCityRef();
             }
             $param = $json->serialize([
                 'modelName' => 'InternetDocument',
                 'calledMethod' => 'getDocumentPrice',
                 'apiKey' => $this->getConfigData(self::PATH_KEY_NEW_POST),
                 'methodProperties' => [
-                    "CitySender" => "db5c88e0-391c-11dd-90d9-001a92567626",
-//                    "CityRecipient" => $request->getData('dest_region_code'),
+                    "CitySender" => $this->getConfigData(self::CITY_SENDER),
                     "CityRecipient" => $cityRef,
                     "Weight" => $request->getData('weight') || 1000,
                     "ServiceType" => "WarehouseWarehouse",
@@ -178,9 +212,10 @@ class NewPost extends AbstractCarrier implements CarrierInterface
             ]);
             $curl->post(self::URL_NEW_POST, $param);
             $answer = $json->unserialize($curl->getBody());
-            if($answer['success'] === false) {
+            if ($answer['success'] === false) {
                 return 0;
             }
+
             return $answer['data'][0]['Cost'] / $exchangeRates['saleRate'];
         } catch (NotFoundException $exception) {
             throw new NotFoundException(__($exception));

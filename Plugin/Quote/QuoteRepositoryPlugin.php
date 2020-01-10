@@ -8,7 +8,6 @@
 
 namespace Mytest\Checkout\Plugin\Quote;
 
-use Mytest\Checkout\Model\NewPostAddress;
 use Mytest\Checkout\Model\NewPostAddressFactory;
 use Mytest\Checkout\Api\NewPostAddressRepositoryInterface;
 
@@ -35,6 +34,12 @@ class QuoteRepositoryPlugin
         $this->modelFactory = $newPostAddressFactory;
     }
 
+    /**
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     *
+     * @return \Magento\Quote\Api\Data\CartInterface
+     */
     public function afterGet(\Magento\Quote\Api\CartRepositoryInterface $quoteRepository, \Magento\Quote\Api\Data\CartInterface $quote)
     {
 

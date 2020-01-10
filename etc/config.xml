@@ -21,6 +21,7 @@
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
                 <handling_type>F</handling_type>
                 <new_post_key>f5b54b3f7ce5800ca0ffcd95a4dbed15</new_post_key>
+                <city_sender>db5c88e0-391c-11dd-90d9-001a92567626</city_sender>
             </vaimo_stripe_newpost>
         </carriers>
     </default>

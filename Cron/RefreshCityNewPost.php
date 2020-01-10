@@ -36,6 +36,16 @@ class RefreshCityNewPost extends AbstractRefreshDataNewPost
      */
     private $repository;
 
+    /**
+     * RefreshCityNewPost constructor.
+     *
+     * @param CityRepositoryInterface $repository
+     * @param CityFactory $cityFactory
+     * @param ConfigFactory $configFactory
+     * @param ResourceConnectionFactory $resourceConnectionFactory
+     * @param CurlFactory $curlFactory
+     * @param JsonFactory $jsonFactory
+     */
     public function __construct(
         CityRepositoryInterface $repository,
         CityFactory $cityFactory,

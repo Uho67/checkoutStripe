@@ -13,6 +13,10 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
+/**
+ * Class Config
+ * @package Mytest\Checkout\Gateway\Config
+ */
 class Config implements ConfigInterface
 {
     const DEFAULT_PATTERN = 'payment/%s/%s';

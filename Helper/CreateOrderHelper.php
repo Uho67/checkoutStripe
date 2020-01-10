@@ -24,6 +24,9 @@ use Magento\Framework\Model\AbstractExtensibleModel;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Mytest\Checkout\Model\NewPostAddressFactory;
+use Mytest\Checkout\Api\NewPostAddressRepositoryInterface;
+use Magento\Quote\Api\Data\CartExtensionFactory;
 
 /**
  * Class CreateOrderHelper
@@ -31,17 +34,53 @@ use Magento\Framework\Exception\NoSuchEntityException;
  */
 class CreateOrderHelper extends AbstractHelper
 {
+    /**
+     * @var QuoteManagement
+     */
     private $quoteManagement;
+    /**
+     * @var CustomerFactory
+     */
     private $customerFactory;
+    /**
+     * @var CustomerRepositoryInterface
+     */
     private $customerRepository;
+    /**
+     * @var StoreManagerInterface
+     */
     private $_storeManager;
+    /**
+     * @var CartRepositoryInterface
+     */
     private $quoteRepository;
+    /**
+     * @var CollectionFactory
+     */
     private $cityCollectionFactory;
+    /**
+     * @var ResourceConnection
+     */
     private $resource;
+    /**
+     * @var NewPostAddressFactory
+     */
+    private $newPostAddressFactory;
+    /**
+     * @var NewPostAddressRepositoryInterface
+     */
+    private $newPostAddressRepository;
+    /**
+     * @var CartExtensionFactory
+     */
+    private $cartExtensionFactory;
 
     /**
      * CreateOrderHelper constructor.
      *
+     * @param CartExtensionFactory $cartExtensionFactory
+     * @param NewPostAddressRepositoryInterface $newPostAddressRepository
+     * @param NewPostAddressFactory $newPostAddressFactory
      * @param ResourceConnection $resourceConnection
      * @param CollectionFactory $collectionFactory
      * @param CartRepositoryInterface $cartRepository
@@ -52,6 +91,9 @@ class CreateOrderHelper extends AbstractHelper
      * @param Context $context
      */
     public function __construct(
+        CartExtensionFactory $cartExtensionFactory,
+        NewPostAddressRepositoryInterface $newPostAddressRepository,
+        NewPostAddressFactory $newPostAddressFactory,
         ResourceConnection $resourceConnection,
         CollectionFactory $collectionFactory,
         CartRepositoryInterface $cartRepository,
@@ -61,6 +103,9 @@ class CreateOrderHelper extends AbstractHelper
         StoreManagerInterface $storeManager,
         Context $context
     ) {
+        $this->cartExtensionFactory = $cartExtensionFactory;
+        $this->newPostAddressRepository = $newPostAddressRepository;
+        $this->newPostAddressFactory = $newPostAddressFactory;
         $this->resource = $resourceConnection;
         $this->cityCollectionFactory = $collectionFactory;
         $this->quoteRepository = $cartRepository;
@@ -81,6 +126,13 @@ class CreateOrderHelper extends AbstractHelper
      */
     public function createMageOrder($orderParams, $quote)
     {
+        $newPostAddress = $this->newPostAddressFactory->create();
+        $newPostAddress ->setAreaRef($orderParams['area']);
+           $newPostAddress ->setCityRef($orderParams['city']);
+           $newPostAddress ->setWarehouseRef($orderParams['warehouse_ref']);
+        $extensionAttributes = $this->cartExtensionFactory->create();
+        $extensionAttributes->setNewPostAddress($newPostAddress);
+        $quote->setExtensionAttributes($extensionAttributes);
         $orderData = $this->getOrderData($orderParams);
         $store = $this->_storeManager->getStore();
         $websiteId = $this->_storeManager->getStore()->getWebsiteId();
@@ -110,10 +162,15 @@ class CreateOrderHelper extends AbstractHelper
         $quote->setPaymentMethod('mytest_stripe'); //payment method
         $quote->setInventoryProcessed(false); //not effetc inventory
         $quote->save();
+        $newPostAddress->setQuoteId($quote->getId());
+        $this->newPostAddressRepository->save($newPostAddress);
         // Set Sales Order Payment
         $quote->getPayment()->importData(['method' => 'mytest_stripe']);
         // Collect Totals & Save Quote
         $quote->collectTotals();
+        /**
+         * add newPostAddress which will be used as extensionAttribute
+         */
         $this->quoteRepository->save($quote);
         // Create Order From Quote
         $order = $this->quoteManagement->submit($quote);

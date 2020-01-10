@@ -10,6 +10,10 @@ namespace Mytest\Checkout\Model\ResourceModel\NewPostAddress;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
+/**
+ * Class Collection
+ * @package Mytest\Checkout\Model\ResourceModel\NewPostAddress
+ */
 class Collection extends AbstractCollection
 {
     public function _construct()

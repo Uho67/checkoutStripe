@@ -11,6 +11,10 @@ namespace Mytest\Checkout\Model\ResourceModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Mytest\Checkout\Model\NewPostAddressInterface;
 
+/**
+ * Class NewPostAddress
+ * @package Mytest\Checkout\Model\ResourceModel
+ */
 class NewPostAddress extends AbstractDb
 {
     protected function _construct()

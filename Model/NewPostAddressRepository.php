@@ -29,7 +29,7 @@ class NewPostAddressRepository implements NewPostAddressRepositoryInterface
      * NewPostAddressRepository constructor.
      *
      * @param ResourceModel $resourceModel
-     * @param \Mytest\Checkout\Model\NewPostAddressFactory $newPostAddressFactory
+     * @param NewPostAddressFactory $newPostAddressFactory
      * @param CollectionFactory $collectionFactory
      */
     public function __construct(
@@ -45,7 +45,7 @@ class NewPostAddressRepository implements NewPostAddressRepositoryInterface
     /**
      * @param $id
      *
-     * @return NewPostAddress
+     * @return NewPostAddressInterface
      * @throws NoSuchEntityException
      */
     public function getById($id)
@@ -53,7 +53,7 @@ class NewPostAddressRepository implements NewPostAddressRepositoryInterface
         $model = $this->modelFactory->create();
         $this->resourceModel->load($model, $id);
         if (!$model->getId()) {
-            throw new NoSuchEntityException(__('MOdel with id "%1" does not exist.', $id));
+            throw new NoSuchEntityException(__('Model with id "%1" does not exist.', $id));
         } else {
             return $model;
         }

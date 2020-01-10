@@ -43,34 +43,46 @@
             <formElements>
                 <select>
                     <settings>
+                        <caption translate="true">-- Please Select --</caption>
                         <options class="Mytest\Checkout\Model\Source\NewPost\Area"/>
+                        <validation>
+                            <rule name="required-entry" xsi:type="boolean">true</rule>
+                        </validation>
                     </settings>
                 </select>
             </formElements>
         </field>
         <field name="city" formElement="select">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="require" xsi:type="boolean">true</item>
-                </item>
-            </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">City</label>
                 <dataScope>city</dataScope>
             </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <validation>
+                            <rule name="required-entry" xsi:type="boolean">true</rule>
+                        </validation>
+                    </settings>
+                </select>
+            </formElements>
         </field>
-        <field name="street" formElement="select">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="require" xsi:type="boolean">true</item>
-                </item>
-            </argument>
+        <field name="warehouse_ref" formElement="select">
             <settings>
                 <dataType>text</dataType>
-                <label translate="true">Warehouse street</label>
-                <dataScope>street</dataScope>
+                <label translate="true">Warehouse</label>
+                <dataScope>warehouse_ref</dataScope>
             </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <validation>
+                            <rule name="required-entry" xsi:type="boolean">true</rule>
+                        </validation>
+                    </settings>
+                </select>
+            </formElements>
         </field>
         <field name="firstname" formElement="input">
             <argument name="data" xsi:type="array">
@@ -108,6 +120,17 @@
                 <dataScope>telephone</dataScope>
             </settings>
         </field>
+        <field name="street" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="require" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <visible>false</visible>
+                <dataScope>street</dataScope>
+            </settings>
+        </field>
         <field name="email" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -129,7 +152,15 @@
             </argument>
             <settings>
                 <visible>false</visible>
+                <disabled>true</disabled>
                 <dataScope>productsParams</dataScope>
+            </settings>
+        </field>
+        <field name="cost" formElement="input">
+            <settings>
+                <dataScope>cost</dataScope>
+                <label>Shipping cost uan</label>
+                <disabled>true</disabled>
             </settings>
         </field>
         <field name="mybutton">

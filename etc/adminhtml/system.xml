@@ -50,6 +50,11 @@
                 <field id="new_post_key" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>New post's key</label>
                 </field>
+                <field id="city_sender" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>City sender</label>
+                    <source_model>Mytest\Checkout\Model\ResourceModel\City\Collection</source_model>
+                    <can_be_empty>0</can_be_empty>
+                </field>
             </group>
         </section>
     </system>
